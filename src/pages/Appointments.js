@@ -3,7 +3,7 @@ import { Plus, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export default function Appointments() {
-  const { appointments, updateAppointmentStatus } = useApp();
+  const { appointments, updateAppointmentStatus, addNotification } = useApp();
   const [activeTab, setActiveTab] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -123,7 +123,16 @@ export default function Appointments() {
                       {apt.status === 'Pending' && (
                         <button
                           className="btn btn-success btn-sm"
-                          onClick={() => updateAppointmentStatus(apt.id, 'Confirmed')}
+                          onClick={() => {
+                            updateAppointmentStatus(apt.id, 'Confirmed');
+                            addNotification({
+                              type: 'appointment',
+                              message: `Appointment confirmed: ${apt.patientName} with ${apt.doctor} at ${apt.time}`,
+                              pushTitle: 'Appointment Confirmed',
+                              pushBody: `${apt.patientName} — ${apt.date} at ${apt.time} with ${apt.doctor}`,
+                              url: '/appointments',
+                            });
+                          }}
                         >
                           Confirm
                         </button>
@@ -131,7 +140,16 @@ export default function Appointments() {
                       {apt.status !== 'Cancelled' && (
                         <button
                           className="btn btn-outline btn-sm"
-                          onClick={() => updateAppointmentStatus(apt.id, 'Cancelled')}
+                          onClick={() => {
+                            updateAppointmentStatus(apt.id, 'Cancelled');
+                            addNotification({
+                              type: 'alert',
+                              message: `Appointment cancelled: ${apt.patientName} with ${apt.doctor} at ${apt.time}`,
+                              pushTitle: 'Appointment Cancelled',
+                              pushBody: `${apt.patientName} — ${apt.date} at ${apt.time} has been cancelled`,
+                              url: '/appointments',
+                            });
+                          }}
                           style={{ color: '#ef4444', borderColor: '#fecaca' }}
                         >
                           Cancel

@@ -5,14 +5,15 @@ import Header from './Header';
 import { useApp } from '../../context/AppContext';
 
 export default function Layout() {
-  const { sidebarCollapsed } = useApp();
+  const { sidebarCollapsed, notificationPermission, notificationSupported } = useApp();
+  const hasBanner = notificationSupported && notificationPermission === 'default';
 
   return (
     <div className="app-layout">
       <Sidebar />
       <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <Header />
-        <div className="page-content">
+        <div className="page-content" style={hasBanner ? { marginTop: 'calc(var(--header-height) + 44px)' } : undefined}>
           <Outlet />
         </div>
       </div>

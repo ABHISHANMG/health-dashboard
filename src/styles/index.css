@@ -311,6 +311,61 @@ body {
   border: 2px solid var(--white);
 }
 
+.notification-count {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  background: var(--danger);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--white);
+}
+
+/* Notification permission banner */
+.notification-banner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sidebar-width);
+  height: 44px;
+  background: linear-gradient(135deg, var(--primary), #818cf8);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  z-index: 95;
+  padding: 0 24px;
+  font-size: 13px;
+  transition: left 0.3s ease;
+}
+
+.notification-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notification-banner .btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  padding: 4px 14px;
+}
+
+.notification-banner .btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 .user-avatar {
   width: 36px;
   height: 36px;
@@ -338,6 +393,11 @@ body {
   border: 1px solid var(--gray-200);
   z-index: 200;
   overflow: hidden;
+}
+
+.notification-dropdown-list {
+  max-height: 360px;
+  overflow-y: auto;
 }
 
 .notification-dropdown-header {
