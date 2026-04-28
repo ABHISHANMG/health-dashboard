@@ -208,42 +208,10 @@ This application is deployed on **Cloudflare Pages** for fast global delivery vi
 6. Click **Save and Deploy** — Cloudflare builds and deploys automatically
 7. Every subsequent push to `main` triggers a new deployment
 
-#### Option 2: Direct Upload (CLI)
+#### Deployment
 
-```bash
-# Install Wrangler CLI
-npm install -g wrangler
+Vercel deployment CI/CD setup by auto deploy by github pushes
 
-# Login to Cloudflare
-wrangler login
-
-# Build the production bundle
-npm run build
-
-# Deploy to Cloudflare Pages
-wrangler pages deploy build --project-name=medflow-dashboard
-```
-
-### SPA Routing on Cloudflare Pages
-
-Since this is a single-page React app using client-side routing, Cloudflare needs to redirect all paths to `index.html`. Create a `_redirects` file in the `public` folder:
-
-```
-/*    /index.html   200
-```
-
-This ensures routes like `/patients`, `/analytics`, and `/login` work correctly on page refresh instead of returning a 404.
-
-
-### Build Configuration Summary
-
-| Setting | Value |
-|---|---|
-| **Framework** | Create React App |
-| **Build command** | `npm run build` |
-| **Output directory** | `build` |
-| **Node.js version** | 18+ |
-| **Root directory** | `/` |
 
 ## Environment Variables
 
