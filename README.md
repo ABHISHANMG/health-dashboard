@@ -172,30 +172,28 @@ npm start
 npm run build
 ```
 
-## Deployment (Cloudflare Pages)
+## Deployment (Vercel)
 
-This application is deployed on **Cloudflare Pages** for fast global delivery via Cloudflare's edge network.
+This application is deployed on **Vercel** with CI/CD auto-deploy on every GitHub push.
 
-### Why Cloudflare Pages
-- **Global CDN** — assets served from 300+ edge locations worldwide, sub-50ms TTFB
+### Why Vercel
+- **Global Edge Network** — assets served from edge locations worldwide for fast load times
 - **Automatic HTTPS** — SSL certificates provisioned and renewed automatically
-- **Zero cold starts** — static assets served instantly, no server spin-up
-- **Free tier** — unlimited bandwidth, 500 builds/month
+- **Zero configuration** — auto-detects Create React App and configures build settings
+- **Free tier** — generous limits for personal and hobby projects
 - **Git integration** — auto-deploys on every push to `main`
-- **Preview deployments** — every PR gets a unique preview URL
+- **Preview deployments** — every PR gets a unique preview URL for testing
 
 ### Deploy Steps
 
-#### Option 1: Git Integration (Recommended)
-
 1. Push the repository to GitHub
-2. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/) > **Workers & Pages** > **Create application** > **Pages**
-3. Connect your GitHub account and select the repository
-4. Configure build settings:
-   - **Framework preset:** Create React App
-   - **Build command:** `npm run build`
-   - **Build output directory:** `build`
-5. Add environment variables under **Settings > Environment variables**:
+2. Go to [vercel.com](https://vercel.com) and sign in with GitHub
+3. Click **Add New Project** and import the repository
+4. Vercel auto-detects the framework — verify the settings:
+   - **Framework Preset:** Create React App
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `build`
+5. Add environment variables under **Settings > Environment Variables**:
    ```
    REACT_APP_FIREBASE_API_KEY=your_key
    REACT_APP_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
@@ -205,12 +203,9 @@ This application is deployed on **Cloudflare Pages** for fast global delivery vi
    REACT_APP_FIREBASE_APP_ID=your_app_id
    REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id
    ```
-6. Click **Save and Deploy** — Cloudflare builds and deploys automatically
-7. Every subsequent push to `main` triggers a new deployment
-
-#### Deployment
-
-Vercel deployment CI/CD setup by auto deploy by github pushes
+6. Click **Deploy** — Vercel builds and deploys automatically
+7. Every subsequent push to `main` triggers a new production deployment
+8. Every PR push creates a preview deployment with a unique URL
 
 
 ## Environment Variables
