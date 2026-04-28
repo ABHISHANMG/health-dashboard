@@ -1,27 +1,131 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, AlertCircle } from 'lucide-react';
+import { Heart, Mail, Lock, Eye, EyeOff, User, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+const FIREBASE_ERRORS = {
+  'auth/user-not-found': 'No account found with this email',
+  'auth/wrong-password': 'Incorrect password',
+  'auth/invalid-credential': 'Invalid email or password',
+  'auth/email-already-in-use': 'This email is already registered. Try signing in.',
+  'auth/invalid-email': 'Please enter a valid email address',
+  'auth/weak-password': 'Password should be at least 6 characters',
+  'auth/too-many-requests': 'Too many failed attempts. Please try again later.',
+  'auth/network-request-failed': 'Network error. Check your connection.',
+  'auth/popup-closed-by-user': null, // silent dismiss
+};
+
+function validate(fields, isRegister) {
+  const errors = {};
+
+  if (isRegister && !fields.name.trim()) {
+    errors.name = 'Full name is required';
+  }
+
+  if (!fields.email.trim()) {
+    errors.email = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) {
+    errors.email = 'Enter a valid email address';
+  }
+
+  if (!fields.password) {
+    errors.password = 'Password is required';
+  } else if (fields.password.length < 6) {
+    errors.password = 'Must be at least 6 characters';
+  }
+
+  if (isRegister) {
+    if (!fields.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (fields.password !== fields.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+  }
+
+  return errors;
+}
+
 export default function Login() {
-  const [error, setError] = useState('');
+  const [isRegister, setIsRegister] = useState(false);
+  const [fields, setFields] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [firebaseError, setFirebaseError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const { loginWithGoogle } = useAuth();
+  const [touched, setTouched] = useState({});
+
+  const { loginWithEmail, registerWithEmail, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
+  const setField = (key, value) => {
+    setFields((prev) => ({ ...prev, [key]: value }));
+    // Clear field error on type
+    if (fieldErrors[key]) {
+      setFieldErrors((prev) => ({ ...prev, [key]: '' }));
+    }
+    if (firebaseError) setFirebaseError('');
+  };
+
+  const handleBlur = (key) => {
+    setTouched((prev) => ({ ...prev, [key]: true }));
+    const errs = validate(fields, isRegister);
+    if (errs[key]) {
+      setFieldErrors((prev) => ({ ...prev, [key]: errs[key] }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFirebaseError('');
+    setSuccessMsg('');
+
+    const errs = validate(fields, isRegister);
+    setFieldErrors(errs);
+    setTouched({ name: true, email: true, password: true, confirmPassword: true });
+
+    if (Object.keys(errs).length > 0) return;
+
+    setLoading(true);
+    try {
+      if (isRegister) {
+        await registerWithEmail(fields.email, fields.password, fields.name);
+        navigate('/');
+      } else {
+        await loginWithEmail(fields.email, fields.password);
+        navigate('/');
+      }
+    } catch (err) {
+      const msg = FIREBASE_ERRORS[err.code];
+      if (msg === null) return; // silent (popup closed)
+      setFirebaseError(msg || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleGoogleLogin = async () => {
-    setError('');
+    setFirebaseError('');
     setLoading(true);
     try {
       await loginWithGoogle();
       navigate('/');
     } catch (err) {
-      if (err.code !== 'auth/popup-closed-by-user') {
-        setError(err.message);
-      }
+      const msg = FIREBASE_ERRORS[err.code];
+      if (msg === null) return;
+      setFirebaseError(msg || 'Google sign-in failed. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const switchMode = () => {
+    setIsRegister(!isRegister);
+    setFieldErrors({});
+    setFirebaseError('');
+    setSuccessMsg('');
+    setTouched({});
+    setFields({ name: '', email: '', password: '', confirmPassword: '' });
   };
 
   return (
@@ -49,25 +153,35 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Right — Google Login */}
+        {/* Right — Auth Form */}
         <div style={styles.right}>
           <div style={styles.formContainer}>
-            <h2 style={styles.formTitle}>Welcome back</h2>
-            <p style={styles.formSubtitle}>Sign in to access your dashboard</p>
+            <h2 style={styles.formTitle}>
+              {isRegister ? 'Create your account' : 'Welcome back'}
+            </h2>
+            <p style={styles.formSubtitle}>
+              {isRegister ? 'Start managing your practice today' : 'Sign in to access your dashboard'}
+            </p>
 
-            {error && (
+            {/* Firebase error */}
+            {firebaseError && (
               <div style={styles.errorBox}>
-                <AlertCircle size={16} />
-                <span>{error}</span>
+                <AlertCircle size={16} style={{ flexShrink: 0 }} />
+                <span>{firebaseError}</span>
               </div>
             )}
 
+            {/* Success message */}
+            {successMsg && (
+              <div style={styles.successBox}>
+                <CheckCircle size={16} style={{ flexShrink: 0 }} />
+                <span>{successMsg}</span>
+              </div>
+            )}
+
+            {/* Google OAuth */}
             <button
-              style={{
-                ...styles.googleBtn,
-                opacity: loading ? 0.7 : 1,
-                cursor: loading ? 'not-allowed' : 'pointer',
-              }}
+              style={{ ...styles.googleBtn, opacity: loading ? 0.7 : 1 }}
               onClick={handleGoogleLogin}
               disabled={loading}
               type="button"
@@ -78,11 +192,128 @@ export default function Login() {
                 <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
                 <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
               </svg>
-              {loading ? 'Signing in...' : 'Continue with Google'}
+              {loading ? 'Please wait...' : `Continue with Google`}
             </button>
 
-            <p style={styles.terms}>
-              By signing in, you agree to our Terms of Service and Privacy Policy.
+            {/* Divider */}
+            <div style={styles.divider}>
+              <span style={styles.dividerLine} />
+              <span style={styles.dividerText}>or {isRegister ? 'sign up' : 'sign in'} with email</span>
+              <span style={styles.dividerLine} />
+            </div>
+
+            {/* Email/Password Form */}
+            <form onSubmit={handleSubmit} noValidate>
+              {/* Name — register only */}
+              {isRegister && (
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>Full Name</label>
+                  <div style={{ ...styles.inputWrapper, ...(fieldErrors.name && touched.name ? styles.inputError : {}) }}>
+                    <User size={16} style={styles.inputIcon} />
+                    <input
+                      type="text"
+                      placeholder="Dr. John Smith"
+                      value={fields.name}
+                      onChange={(e) => setField('name', e.target.value)}
+                      onBlur={() => handleBlur('name')}
+                      style={styles.input}
+                    />
+                  </div>
+                  {fieldErrors.name && touched.name && <span style={styles.fieldError}>{fieldErrors.name}</span>}
+                </div>
+              )}
+
+              {/* Email */}
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Email</label>
+                <div style={{ ...styles.inputWrapper, ...(fieldErrors.email && touched.email ? styles.inputError : {}) }}>
+                  <Mail size={16} style={styles.inputIcon} />
+                  <input
+                    type="email"
+                    placeholder="you@example.com"
+                    value={fields.email}
+                    onChange={(e) => setField('email', e.target.value)}
+                    onBlur={() => handleBlur('email')}
+                    style={styles.input}
+                    autoComplete="email"
+                  />
+                </div>
+                {fieldErrors.email && touched.email && <span style={styles.fieldError}>{fieldErrors.email}</span>}
+              </div>
+
+              {/* Password */}
+              <div style={styles.inputGroup}>
+                <label style={styles.label}>Password</label>
+                <div style={{ ...styles.inputWrapper, ...(fieldErrors.password && touched.password ? styles.inputError : {}) }}>
+                  <Lock size={16} style={styles.inputIcon} />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder={isRegister ? 'Create a password (min 6 chars)' : 'Enter your password'}
+                    value={fields.password}
+                    onChange={(e) => setField('password', e.target.value)}
+                    onBlur={() => handleBlur('password')}
+                    style={styles.input}
+                    autoComplete={isRegister ? 'new-password' : 'current-password'}
+                  />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+                {fieldErrors.password && touched.password && <span style={styles.fieldError}>{fieldErrors.password}</span>}
+                {/* Password strength indicator for register */}
+                {isRegister && fields.password && (
+                  <div style={styles.strengthBar}>
+                    <div style={{
+                      ...styles.strengthFill,
+                      width: fields.password.length < 6 ? '33%' : fields.password.length < 10 ? '66%' : '100%',
+                      background: fields.password.length < 6 ? '#ef4444' : fields.password.length < 10 ? '#f59e0b' : '#10b981',
+                    }} />
+                    <span style={styles.strengthLabel}>
+                      {fields.password.length < 6 ? 'Weak' : fields.password.length < 10 ? 'Fair' : 'Strong'}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password — register only */}
+              {isRegister && (
+                <div style={styles.inputGroup}>
+                  <label style={styles.label}>Confirm Password</label>
+                  <div style={{ ...styles.inputWrapper, ...(fieldErrors.confirmPassword && touched.confirmPassword ? styles.inputError : {}) }}>
+                    <Lock size={16} style={styles.inputIcon} />
+                    <input
+                      type="password"
+                      placeholder="Re-enter your password"
+                      value={fields.confirmPassword}
+                      onChange={(e) => setField('confirmPassword', e.target.value)}
+                      onBlur={() => handleBlur('confirmPassword')}
+                      style={styles.input}
+                      autoComplete="new-password"
+                    />
+                    {fields.confirmPassword && fields.password === fields.confirmPassword && (
+                      <CheckCircle size={16} style={{ position: 'absolute', right: 12, color: '#10b981' }} />
+                    )}
+                  </div>
+                  {fieldErrors.confirmPassword && touched.confirmPassword && (
+                    <span style={styles.fieldError}>{fieldErrors.confirmPassword}</span>
+                  )}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                style={{ ...styles.submitBtn, opacity: loading ? 0.7 : 1 }}
+                disabled={loading}
+              >
+                {loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Sign In'}
+              </button>
+            </form>
+
+            <p style={styles.switchText}>
+              {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <button type="button" style={styles.switchBtn} onClick={switchMode}>
+                {isRegister ? 'Sign In' : 'Sign Up'}
+              </button>
             </p>
           </div>
         </div>
@@ -103,8 +334,8 @@ const styles = {
   container: {
     display: 'flex',
     width: '100%',
-    maxWidth: 960,
-    minHeight: 520,
+    maxWidth: 980,
+    minHeight: 600,
     borderRadius: 16,
     overflow: 'hidden',
     boxShadow: '0 20px 60px rgba(0,0,0,0.12)',
@@ -119,20 +350,11 @@ const styles = {
     alignItems: 'center',
   },
   brandContent: { maxWidth: 380 },
-  logoRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 32,
-  },
+  logoRow: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 32 },
   logoIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 40, height: 40, borderRadius: 10,
     background: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   logoText: { fontSize: 22, fontWeight: 700 },
   tagline: { fontSize: 28, fontWeight: 700, lineHeight: 1.3, marginBottom: 16 },
@@ -147,38 +369,69 @@ const styles = {
   },
   right: {
     flex: 1,
-    padding: 48,
+    padding: '40px 48px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    overflowY: 'auto',
   },
-  formContainer: { width: '100%', maxWidth: 340, textAlign: 'center' },
+  formContainer: { width: '100%', maxWidth: 360 },
   formTitle: { fontSize: 24, fontWeight: 700, color: '#111827', marginBottom: 6 },
-  formSubtitle: { fontSize: 14, color: '#6b7280', marginBottom: 32 },
+  formSubtitle: { fontSize: 14, color: '#6b7280', marginBottom: 24 },
   errorBox: {
     display: 'flex', alignItems: 'center', gap: 8,
     padding: '10px 14px', background: '#fee2e2', color: '#991b1b',
-    borderRadius: 8, fontSize: 13, marginBottom: 16, textAlign: 'left',
+    borderRadius: 8, fontSize: 13, marginBottom: 16,
+  },
+  successBox: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    padding: '10px 14px', background: '#d1fae5', color: '#065f46',
+    borderRadius: 8, fontSize: 13, marginBottom: 16,
   },
   googleBtn: {
-    width: '100%',
-    padding: '12px 16px',
-    border: '1px solid #d1d5db',
-    borderRadius: 8,
-    background: '#fff',
-    fontSize: 14,
-    fontWeight: 500,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    transition: 'all 0.2s',
-    color: '#374151',
+    width: '100%', padding: '11px 16px',
+    border: '1px solid #d1d5db', borderRadius: 8, background: '#fff',
+    fontSize: 14, fontWeight: 500, cursor: 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    gap: 10, transition: 'all 0.2s', color: '#374151',
   },
-  terms: {
-    fontSize: 12,
-    color: '#9ca3af',
-    marginTop: 20,
-    lineHeight: 1.5,
+  divider: { display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' },
+  dividerLine: { flex: 1, height: 1, background: '#e5e7eb' },
+  dividerText: { fontSize: 12, color: '#9ca3af', whiteSpace: 'nowrap' },
+  inputGroup: { marginBottom: 16 },
+  label: { display: 'block', fontSize: 13, fontWeight: 500, color: '#374151', marginBottom: 6 },
+  inputWrapper: {
+    position: 'relative', display: 'flex', alignItems: 'center',
+    border: '1px solid #d1d5db', borderRadius: 8, transition: 'border-color 0.2s',
+  },
+  inputError: { borderColor: '#ef4444' },
+  inputIcon: { position: 'absolute', left: 12, color: '#9ca3af', pointerEvents: 'none' },
+  input: {
+    width: '100%', padding: '10px 12px 10px 38px',
+    border: 'none', borderRadius: 8, fontSize: 14, outline: 'none',
+    background: 'transparent',
+  },
+  eyeBtn: {
+    position: 'absolute', right: 10, background: 'none', border: 'none',
+    cursor: 'pointer', color: '#9ca3af', padding: 4,
+  },
+  fieldError: { display: 'block', fontSize: 12, color: '#ef4444', marginTop: 4 },
+  strengthBar: {
+    display: 'flex', alignItems: 'center', gap: 8, marginTop: 6,
+  },
+  strengthFill: {
+    height: 4, borderRadius: 2, transition: 'all 0.3s', flex: 1, maxWidth: 120,
+  },
+  strengthLabel: { fontSize: 11, color: '#6b7280' },
+  submitBtn: {
+    width: '100%', padding: '11px 16px',
+    background: '#2563eb', color: '#fff', border: 'none', borderRadius: 8,
+    fontSize: 14, fontWeight: 600, cursor: 'pointer', marginTop: 4,
+    transition: 'background 0.2s',
+  },
+  switchText: { textAlign: 'center', fontSize: 13, color: '#6b7280', marginTop: 20 },
+  switchBtn: {
+    background: 'none', border: 'none', color: '#2563eb',
+    fontWeight: 600, cursor: 'pointer', fontSize: 13,
   },
 };
