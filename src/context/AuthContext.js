@@ -3,8 +3,6 @@ import {
   auth,
   googleProvider,
   signInWithPopup,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
 } from '../firebase';
@@ -25,22 +23,9 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
 
-  const loginWithEmail = (email, password) =>
-    signInWithEmailAndPassword(auth, email, password);
-
-  const registerWithEmail = (email, password) =>
-    createUserWithEmailAndPassword(auth, email, password);
-
   const logout = () => signOut(auth);
 
-  const value = {
-    user,
-    loading,
-    loginWithGoogle,
-    loginWithEmail,
-    registerWithEmail,
-    logout,
-  };
+  const value = { user, loading, loginWithGoogle, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
