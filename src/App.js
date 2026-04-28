@@ -9,8 +9,6 @@ import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
 import Appointments from './pages/Appointments';
 import Analytics from './pages/Analytics';
-import Doctors from './pages/Doctors';
-import Settings from './pages/Settings';
 import './styles/index.css';
 
 function App() {
@@ -32,8 +30,6 @@ function App() {
               <Route path="patients" element={<Patients />} />
               <Route path="appointments" element={<Appointments />} />
               <Route path="analytics" element={<Analytics />} />
-              <Route path="doctors" element={<Doctors />} />
-              <Route path="settings" element={<Settings />} />
               <Route path="*" element={
                 <div className="empty-state">
                   <h3>Page Not Found</h3>

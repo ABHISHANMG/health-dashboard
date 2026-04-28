@@ -5,9 +5,6 @@ import {
   Users,
   Calendar,
   BarChart3,
-  Stethoscope,
-  Settings,
-  HelpCircle,
   Heart,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
@@ -17,12 +14,6 @@ const navItems = [
   { to: '/patients', icon: Users, label: 'Patients' },
   { to: '/appointments', icon: Calendar, label: 'Appointments' },
   { to: '/analytics', icon: BarChart3, label: 'Analytics' },
-  { to: '/doctors', icon: Stethoscope, label: 'Doctors' },
-];
-
-const bottomItems = [
-  { to: '/settings', icon: Settings, label: 'Settings' },
-  { to: '/help', icon: HelpCircle, label: 'Help & Support' },
 ];
 
 export default function Sidebar() {
@@ -44,18 +35,6 @@ export default function Sidebar() {
             key={item.to}
             to={item.to}
             end={item.to === '/'}
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-          >
-            <item.icon size={20} className="nav-icon" />
-            <span className="nav-label">{item.label}</span>
-          </NavLink>
-        ))}
-
-        <div className="nav-section-title">System</div>
-        {bottomItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
             className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
           >
             <item.icon size={20} className="nav-icon" />

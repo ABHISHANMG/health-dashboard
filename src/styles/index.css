@@ -1005,6 +1005,276 @@ tbody tr {
 }
 
 /* ============================================
+   View Toggle
+   ============================================ */
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 36px;
+  border: none;
+  background: var(--white);
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.view-toggle-btn:first-child {
+  border-right: 1px solid var(--gray-300);
+}
+
+.view-toggle-btn:hover {
+  background: var(--gray-50);
+  color: var(--gray-600);
+}
+
+.view-toggle-btn.active {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.view-toggle-btn.active:hover {
+  background: var(--primary-dark);
+}
+
+/* ============================================
+   Patient Avatar
+   ============================================ */
+
+.patient-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.patient-avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   Patient Grid View
+   ============================================ */
+
+.patient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.patient-grid-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.patient-grid-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.patient-grid-card-accent {
+  height: 3px;
+  width: 100%;
+}
+
+.patient-grid-card-body {
+  padding: 18px 20px 16px;
+}
+
+.patient-grid-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.patient-grid-card-name h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 2px;
+}
+
+.patient-grid-id {
+  font-size: 12px;
+  color: var(--gray-400);
+  font-family: monospace;
+}
+
+.patient-grid-badges {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.patient-grid-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.patient-grid-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+.patient-grid-info-row svg {
+  color: var(--gray-400);
+  flex-shrink: 0;
+}
+
+.patient-grid-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.patient-grid-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+/* ============================================
+   Patient List View
+   ============================================ */
+
+.patient-list {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+}
+
+.patient-list-header {
+  display: grid;
+  grid-template-columns: 1.3fr 1.2fr 1.2fr 0.8fr 50px;
+  gap: 12px;
+  padding: 12px 20px;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+}
+
+.patient-list-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1.2fr 1.2fr 0.8fr 50px;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.patient-list-row:last-child {
+  border-bottom: none;
+}
+
+.patient-list-row:hover {
+  background: var(--gray-50);
+}
+
+.patient-list-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.patient-list-name h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patient-list-name span {
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+.patient-list-center,
+.patient-list-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.patient-list-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+.patient-list-detail svg {
+  color: var(--gray-400);
+  flex-shrink: 0;
+}
+
+.patient-list-detail span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.patient-list-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.patient-list-action {
+  justify-self: center;
+}
+
+/* ============================================
    Responsive
    ============================================ */
 
@@ -1014,6 +1284,21 @@ tbody tr {
   }
   .charts-grid {
     grid-template-columns: 1fr;
+  }
+  .patient-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .patient-list-header {
+    grid-template-columns: 1.3fr 1fr 0.8fr 50px;
+  }
+  .patient-list-row {
+    grid-template-columns: 1.3fr 1fr 0.8fr 50px;
+  }
+  .patient-list-contact {
+    display: none;
+  }
+  .patient-list-header-contact {
+    display: none;
   }
 }
 
@@ -1035,5 +1320,29 @@ tbody tr {
   }
   .search-bar {
     display: none;
+  }
+  .patient-grid {
+    grid-template-columns: 1fr;
+  }
+  .patient-list-header {
+    grid-template-columns: 1fr 0.6fr 40px;
+  }
+  .patient-list-row {
+    grid-template-columns: 1fr 0.6fr 40px;
+  }
+  .patient-list-center,
+  .patient-list-header-center {
+    display: none;
+  }
+  .patient-list-contact,
+  .patient-list-header-contact {
+    display: none;
+  }
+  .filters-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filter-select {
+    width: 100%;
   }
 }
