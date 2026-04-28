@@ -1,6 +1,6 @@
-/* ============================================
+/* 
    B2B Healthcare SaaS — Design System
-   ============================================ */
+    */
 
 :root {
   /* Colors */
@@ -72,9 +72,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ============================================
+/* 
    Layout
-   ============================================ */
+    */
 
 .app-layout {
   display: flex;
@@ -96,9 +96,9 @@ body {
   margin-top: var(--header-height);
 }
 
-/* ============================================
+/* 
    Sidebar
-   ============================================ */
+    */
 
 .sidebar {
   position: fixed;
@@ -233,9 +233,9 @@ body {
   padding: 12px;
 }
 
-/* ============================================
+/* 
    Header
-   ============================================ */
+    */
 
 .header {
   position: fixed;
@@ -491,9 +491,9 @@ body {
   color: var(--gray-400);
 }
 
-/* ============================================
+/* 
    Cards
-   ============================================ */
+    */
 
 .card {
   background: var(--white);
@@ -521,9 +521,9 @@ body {
   padding: 20px;
 }
 
-/* ============================================
+/* 
    Stat Cards
-   ============================================ */
+    */
 
 .stats-grid {
   display: grid;
@@ -593,9 +593,9 @@ body {
 .stat-trend.down { color: var(--danger); }
 .stat-trend span { color: var(--gray-500); font-weight: 400; }
 
-/* ============================================
+/* 
    Charts Grid
-   ============================================ */
+    */
 
 .charts-grid {
   display: grid;
@@ -608,9 +608,9 @@ body {
   min-height: 300px;
 }
 
-/* ============================================
+/* 
    Tables
-   ============================================ */
+    */
 
 .table-container {
   overflow-x: auto;
@@ -649,9 +649,9 @@ tbody tr {
   cursor: pointer;
 }
 
-/* ============================================
+/* 
    Badges & Status
-   ============================================ */
+    */
 
 .badge {
   display: inline-flex;
@@ -670,9 +670,9 @@ tbody tr {
 .badge-primary { background: var(--primary-100); color: var(--primary-dark); }
 .badge-gray { background: var(--gray-100); color: var(--gray-600); }
 
-/* ============================================
+/* 
    Page Headers
-   ============================================ */
+    */
 
 .page-header {
   display: flex;
@@ -693,9 +693,9 @@ tbody tr {
   margin-top: 4px;
 }
 
-/* ============================================
+/* 
    Buttons
-   ============================================ */
+    */
 
 .btn {
   display: inline-flex;
@@ -754,9 +754,9 @@ tbody tr {
   background: #059669;
 }
 
-/* ============================================
+/* 
    Filters Bar
-   ============================================ */
+    */
 
 .filters-bar {
   display: flex;
@@ -781,9 +781,9 @@ tbody tr {
   box-shadow: 0 0 0 3px var(--primary-50);
 }
 
-/* ============================================
+/* 
    Patient Detail
-   ============================================ */
+    */
 
 .patient-detail-grid {
   display: grid;
@@ -814,9 +814,9 @@ tbody tr {
   color: var(--gray-800);
 }
 
-/* ============================================
+/* 
    Activity List
-   ============================================ */
+    */
 
 .activity-list {
   list-style: none;
@@ -853,9 +853,9 @@ tbody tr {
   margin-top: 2px;
 }
 
-/* ============================================
+/* 
    Doctor Cards
-   ============================================ */
+    */
 
 .doctors-grid {
   display: grid;
@@ -928,9 +928,9 @@ tbody tr {
   color: var(--gray-500);
 }
 
-/* ============================================
+/* 
    Tabs
-   ============================================ */
+    */
 
 .tabs {
   display: flex;
@@ -962,9 +962,9 @@ tbody tr {
   border-bottom-color: var(--primary);
 }
 
-/* ============================================
+/* 
    Empty State
-   ============================================ */
+    */
 
 .empty-state {
   text-align: center;
@@ -987,9 +987,9 @@ tbody tr {
   font-size: 14px;
 }
 
-/* ============================================
+/* 
    Modal
-   ============================================ */
+    */
 
 .modal-overlay {
   position: fixed;
@@ -1061,9 +1061,9 @@ tbody tr {
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* ============================================
+/* 
    Form Elements
-   ============================================ */
+    */
 
 .form-group {
   margin-bottom: 16px;
@@ -1092,9 +1092,9 @@ tbody tr {
   box-shadow: 0 0 0 3px var(--primary-50);
 }
 
-/* ============================================
+/* 
    View Toggle
-   ============================================ */
+    */
 
 .view-toggle {
   display: flex;
@@ -1134,9 +1134,9 @@ tbody tr {
   background: var(--primary-dark);
 }
 
-/* ============================================
+/* 
    Patient Avatar
-   ============================================ */
+    */
 
 .patient-avatar {
   width: 44px;
@@ -1164,9 +1164,9 @@ tbody tr {
   flex-shrink: 0;
 }
 
-/* ============================================
+/* 
    Patient Grid View
-   ============================================ */
+    */
 
 .patient-grid {
   display: grid;
@@ -1259,9 +1259,9 @@ tbody tr {
   color: var(--gray-400);
 }
 
-/* ============================================
+/* 
    Patient List View
-   ============================================ */
+    */
 
 .patient-list {
   background: var(--white);
@@ -1362,9 +1362,9 @@ tbody tr {
   justify-self: center;
 }
 
-/* ============================================
+/* 
    Responsive
-   ============================================ */
+    */
 
 @media (max-width: 1200px) {
   .stats-grid {
@@ -1390,68 +1390,16 @@ tbody tr {
   }
 }
 
-/* Desktop/Mobile utility classes */
-.mobile-only {
-  display: none !important;
-}
-
 @media (max-width: 768px) {
-  /* Show/hide helpers */
-  .mobile-only {
-    display: flex !important;
-  }
-  .desktop-only {
-    display: none !important;
-  }
-
-  /* Sidebar — hidden off-screen by default on mobile */
   .sidebar {
-    width: var(--sidebar-width);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 200;
+    width: var(--sidebar-collapsed-width);
   }
-
-  .sidebar.collapsed {
-    width: var(--sidebar-width);
-    transform: translateX(-100%);
+  .main-content {
+    margin-left: var(--sidebar-collapsed-width);
   }
-
-  /* When mobile menu is open, slide in */
-  .sidebar.mobile-open {
-    transform: translateX(0);
+  .header {
+    left: var(--sidebar-collapsed-width);
   }
-
-  .sidebar.mobile-open .logo-text,
-  .sidebar.mobile-open .nav-label,
-  .sidebar.mobile-open .nav-section-title {
-    display: block;
-  }
-
-  .sidebar-close-btn {
-    display: flex;
-  }
-
-  .sidebar-overlay {
-    display: block;
-  }
-
-  /* Main content takes full width */
-  .main-content,
-  .main-content.collapsed {
-    margin-left: 0;
-  }
-
-  .header,
-  .header.collapsed {
-    left: 0;
-  }
-
-  .notification-banner {
-    left: 0;
-  }
-
-  /* Content adjustments */
   .stats-grid {
     grid-template-columns: 1fr;
   }
@@ -1484,14 +1432,5 @@ tbody tr {
   }
   .filter-select {
     width: 100%;
-  }
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .notification-dropdown {
-    width: calc(100vw - 32px);
-    right: -60px;
   }
 }

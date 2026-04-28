@@ -1,6 +1,6 @@
-/* ============================================
+/* 
    MedFlow — Service Worker
-   ============================================ */
+    */
 
 const CACHE_NAME = 'medflow-v1';
 const STATIC_ASSETS = [
