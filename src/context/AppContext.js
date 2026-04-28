@@ -9,6 +9,7 @@ const initialState = {
   appointments: initialAppointments,
   notifications: initialNotifications,
   sidebarCollapsed: false,
+  mobileMenuOpen: false,
   searchQuery: '',
   activeFilters: {},
 };
@@ -17,6 +18,12 @@ function appReducer(state, action) {
   switch (action.type) {
     case 'TOGGLE_SIDEBAR':
       return { ...state, sidebarCollapsed: !state.sidebarCollapsed };
+
+    case 'TOGGLE_MOBILE_MENU':
+      return { ...state, mobileMenuOpen: !state.mobileMenuOpen };
+
+    case 'CLOSE_MOBILE_MENU':
+      return { ...state, mobileMenuOpen: false };
 
     case 'SET_SEARCH_QUERY':
       return { ...state, searchQuery: action.payload };
@@ -68,6 +75,8 @@ export function AppProvider({ children }) {
   const { isSupported, permission, requestPermission, sendNotification } = useNotifications();
 
   const toggleSidebar = useCallback(() => dispatch({ type: 'TOGGLE_SIDEBAR' }), []);
+  const toggleMobileMenu = useCallback(() => dispatch({ type: 'TOGGLE_MOBILE_MENU' }), []);
+  const closeMobileMenu = useCallback(() => dispatch({ type: 'CLOSE_MOBILE_MENU' }), []);
   const setSearchQuery = useCallback((query) => dispatch({ type: 'SET_SEARCH_QUERY', payload: query }), []);
   const setFilter = useCallback((key, value) => dispatch({ type: 'SET_FILTER', payload: { key, value } }), []);
   const clearFilters = useCallback(() => dispatch({ type: 'CLEAR_FILTERS' }), []);
@@ -121,6 +130,8 @@ export function AppProvider({ children }) {
   const value = {
     ...state,
     toggleSidebar,
+    toggleMobileMenu,
+    closeMobileMenu,
     setSearchQuery,
     setFilter,
     clearFilters,

@@ -8,6 +8,7 @@ export default function Header() {
   const {
     sidebarCollapsed,
     toggleSidebar,
+    toggleMobileMenu,
     searchQuery,
     setSearchQuery,
     notifications,
@@ -90,7 +91,11 @@ export default function Header() {
         style={notificationSupported && notificationPermission === 'default' ? { top: 44 } : undefined}
       >
         <div className="header-left">
-          <button className="toggle-btn" onClick={toggleSidebar}>
+          {/* Desktop: collapse sidebar, Mobile: open hamburger menu */}
+          <button className="toggle-btn desktop-only" onClick={toggleSidebar}>
+            <Menu size={20} />
+          </button>
+          <button className="toggle-btn mobile-only" onClick={toggleMobileMenu}>
             <Menu size={20} />
           </button>
 

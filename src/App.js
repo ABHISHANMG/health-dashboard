@@ -7,7 +7,6 @@ import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Patients from './pages/Patients';
-import Appointments from './pages/Appointments';
 import Analytics from './pages/Analytics';
 import './styles/index.css';
 
@@ -28,7 +27,6 @@ function App() {
             >
               <Route index element={<Dashboard />} />
               <Route path="patients" element={<Patients />} />
-              <Route path="appointments" element={<Appointments />} />
               <Route path="analytics" element={<Analytics />} />
               <Route path="*" element={
                 <div className="empty-state">
